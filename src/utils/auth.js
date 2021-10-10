@@ -14,11 +14,11 @@ export function setToken(token) {
 export function removeToken() {
   return Cookies.remove(TokenKey)
 }
-
+// 获取时间戳
 export function getTimeStamp() {
   return Cookies.get(timekey)
 }
-
+// 读取时间戳
 export function setTimeStamp() {
   Cookies.set(timekey, Date.now())
 }

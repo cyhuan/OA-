@@ -15,6 +15,7 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+import * as directvies from '@/directvies'
 
 
 // set ElementUI lang to EN
@@ -22,6 +23,9 @@ Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
 
+Object.keys(directvies).forEach(key => {
+  Vue.directive(key, directvies[key])
+})
 Vue.config.productionTip = false
 
 new Vue({
