@@ -3,7 +3,7 @@ import store from '@/store'
 import router from '@/router'
 import { Message } from 'element-ui'
 import { getTimeStamp } from '@/utils/auth'
-const Timeout = 3600
+const Timeout = 36000
 
 // create an axios instance
 const service = axios.create({
