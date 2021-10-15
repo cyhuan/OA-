@@ -1,7 +1,9 @@
 <template>
   <div class="dashboard-container">
     <div class="app-container">
-      <h2>权限管理</h2>
+      <page-tools>
+        <el-button slot="after" type="primary" size="small"></el-button>
+      </page-tools>
     </div>
   </div>
 </template>

@@ -1,7 +1,13 @@
+// 新增员工的弹框
 <template>
-  <el-dialog title="新增员工" :visible="showDialog">
+  <el-dialog title="新增员工" :visible="showDialog" @close="btnCancel">
     <!-- 表单 -->
-    <el-form :model="formData" :rules="rules" label-width="120px">
+    <el-form
+      ref="addEmployee"
+      :model="formData"
+      :rules="rules"
+      label-width="120px"
+    >
       <el-form-item label="姓名" prop="username">
         <el-input
           v-model="formData.username"
@@ -28,7 +34,15 @@
           v-model="formData.formOfEmployment"
           style="width: 50%"
           placeholder="请选择"
-        />
+        >
+          <!-- 遍历只能遍历组件的数据 -->
+          <el-option
+            v-for="item in EmployeeEnum.hireType"
+            :key="item.id"
+            :label="item.value"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="工号" prop="workNumber">
         <el-input
@@ -50,6 +64,7 @@
           :data="treeData"
           :props="{ label: 'name' }"
           :default-expand-all="true"
+          @node-click="selectNode"
         >
         </el-tree>
       </el-form-item>
@@ -65,8 +80,8 @@
     <template v-slot:footer>
       <el-row type="flex" justify="center">
         <el-col :span="6">
-          <el-button size="small">取消</el-button>
-          <el-button type="primary" size="small">确定</el-button>
+          <el-button size="small" @click="btnCancel">取消</el-button>
+          <el-button type="primary" size="small" @click="btnOK">确定</el-button>
         </el-col>
       </el-row>
     </template>
@@ -76,6 +91,8 @@
 <script>
 import { getDepartments } from "@/api/departments";
 import { transListToTreeData } from "@/utils";
+import EmployeeEnum from "@/api/constant/employees";
+import { addEmployee } from "@/api/employees";
 export default {
   props: {
     showDialog: {
@@ -125,9 +142,11 @@ export default {
       treeData: [], // 定义数组接收树形数据
       showTree: false, // 控制树形的显示或者隐藏
       loading: false, // 控制树的显示或者隐藏进度条
+      EmployeeEnum,
     };
   },
   methods: {
+    // 点击选择部门,获取树形数据
     async getDepartments() {
       this.showTree = true;
       this.loading = true;
@@ -135,6 +154,38 @@ export default {
       // depts是数组 但不是树形
       this.treeData = transListToTreeData(depts, "");
       this.loading = false;
+    },
+    // 点击选中部门
+    selectNode(node) {
+      this.formData.departmentName = node.name;
+      this.showTree = false;
+    },
+    // 点击确定按钮
+    async btnOK() {
+      try {
+        await this.$refs.addEmployee.validate();
+        await addEmployee(this.formData);
+        // this.$parent 父组件的实例
+        this.$parent.getEmployeeList;
+        this.$parent.showDialog = false;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    // 点击取消按钮
+    btnCancel() {
+      // 重置原来的数据
+      this.formData = {
+        username: "",
+        mobile: "",
+        formOfEmployment: "",
+        workNumber: "",
+        departmentName: "",
+        timeOfEntry: "",
+        correctionTime: "",
+      };
+      this.$refs.addEmployee.resetFields(); // 重置校验结果
+      this.$emit("update:showDialog", false);
     },
   },
 };
