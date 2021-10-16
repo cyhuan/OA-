@@ -1,8 +1,6 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
-    <upload-excel />
-    <image-upload />
   </div>
 </template>
 

@@ -17,6 +17,8 @@ import '@/permission' // permission control
 
 import * as directvies from '@/directvies'
 import * as filters from '@/filters'
+// import CheckPermisson from '@/mixin/checkPermisson'
+import CheckPermisson from '@/mixin/checkPermission'
 // 注册全局的过滤器
 Object.keys(filters).forEach(key => {
   // 注册过滤器
@@ -27,6 +29,7 @@ Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
 Vue.use(Component) // 注册自己的插件 
+Vue.mixin(CheckPermisson)
 Object.keys(directvies).forEach(key => {
   Vue.directive(key, directvies[key])
 })
